@@ -4,15 +4,25 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
-const PORT = "4000";
+app.use(express.json());
+const port = process.env.PORT || 5000;
+
+//Get data using API
 app.get("/razu", (req, res) => {
-    // console.log(process.env.PORT);
-  res.send({"Here I am": process.env.PORT});
+  res.send({ "Here I am": process.env.PORT });
 });
-app.listen(PORT, function (error) {
+
+//Post data using API
+app.post("/shafiur", (req, res) => {
+  const { email, password } = req.body;
+  console.log("Email: ",req.body.email);
+  res.send("You got your Data");
+});
+
+app.listen(port, function (error) {
   if (error) {
     console.log("Server connected failed");
   } else {
-    console.log(`Server ruunning port: ${PORT}`);
+    console.log(`Server ruunning port: ${port}`);
   }
 });
