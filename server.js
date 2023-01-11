@@ -14,9 +14,15 @@ app.get("/razu", (req, res) => {
 
 //Post data using API
 app.post("/shafiur", (req, res) => {
+  const mail = "shafiur@gmail.com";
+  const pass = "123456";
   const { email, password } = req.body;
-  console.log("Email: ",req.body.email);
-  res.send("You got your Data");
+  console.log("Email: ", req.body.email);
+  if (email === mail && password === pass) {
+    res.send("Login Success!");
+  } else {
+    res.send("Login Failed!");
+  }
 });
 
 app.listen(port, function (error) {
