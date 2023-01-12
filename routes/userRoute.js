@@ -1,24 +1,11 @@
-const express = require('express');
-
+const express = require("express");
+const { get_Data, post_Data } = require("../controllers/userController");
 const router = express.Router();
 
 //Get data using API
-router.get("/razu", (req, res) => {
-    res.send({ "Here I am": process.env.PORT });
-  });
+router.get("/razu", get_Data);
 
 //Post data using API
-router.post("/shafiur", (req, res) => {
-    const mail = "shafiur@gmail.com";
-    const pass = "123456";
-    const { email, password } = req.body;
-    console.log("Email: ", req.body.email);
-    if (email === mail && password === pass) {
-      res.send("Login Success!");
-    } else {
-      res.send("Login Failed!");
-    }
-  });
+router.post("/shafiur", post_Data);
 
-  module.exports = router;
-
+module.exports = router;
