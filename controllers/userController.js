@@ -1,7 +1,7 @@
 const { AccessToken } = require("../Config/accessToken");
 const dotenv = require("dotenv").config();
 const axios = require("axios");
-// const generateToken = require("../Config/generateToken");
+const generateToken = require("../Config/generateToken");
 
 const loginUser = async (req, res) => {
   const access_token = await AccessToken();
@@ -24,6 +24,10 @@ const loginUser = async (req, res) => {
       //res.json(response.data.message);
       res.json({
         data: response.data.data,
+        token: generateToken(
+          response.data.data[0].ID,
+          response.data.data[0].Password
+        ),
       });
     })
     .catch(function (error) {
