@@ -1,17 +1,35 @@
-const get_Data = (req, res) => {
-  res.send({ "Here I am": process.env.PORT });
-};
+const { AccessToken } = require("../Config/accessToken");
+const dotenv = require("dotenv").config();
+const axios = require("axios");
+// const generateToken = require("../Config/generateToken");
 
-const post_Data = (req, res) => {
-  const mail = "shafiur@gmail.com";
-  const pass = "123456";
+const loginUser = async (req, res) => {
+  const access_token = await AccessToken();
+  // console.log(access_token);
+
   const { email, password } = req.body;
-  console.log("Email: ", req.body.email);
-  if (email === mail && password === pass) {
-    res.send("Login Success!");
-  } else {
-    res.send("Login Failed!");
-  }
+
+  await axios
+    .get(
+      `${process.env.ZOHO_API}/report/All_Users?criteria=(Email="${email}") %26%26 (Password="${password}")`,
+      {
+        headers: {
+          Authorization: `Zoho-oauthtoken ${access_token}`,
+        },
+      }
+    )
+    .then(function (response) {
+      //console.log(response.data.data[0].ID);
+      console.log(response.data);
+      //res.json(response.data.message);
+      res.json({
+        data: response.data.data,
+      });
+    })
+    .catch(function (error) {
+      console.log(error.message);
+      res.json(error.message);
+    });
 };
 
-module.exports = { get_Data, post_Data };
+module.exports = { loginUser };
