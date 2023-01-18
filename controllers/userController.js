@@ -1,7 +1,7 @@
-const { AccessToken } = require("../Config/accessToken");
+const { AccessToken } = require("../config/accessToken");
 const dotenv = require("dotenv").config();
 const axios = require("axios");
-const generateToken = require("../Config/generateToken");
+const generateToken = require("../config/generateToken");
 
 const loginUser = async (req, res) => {
   const access_token = await AccessToken();
@@ -72,15 +72,15 @@ const registerUser = async (req, res) => {
           },
           Address: {
             address_line_1: address_line_1,
-            country: country_id,
-            postal_code: zip_code,
-            state_province: state,
-            district_city: city,
+            // country: country_id,
+            // postal_code: zip_code,
+            // state_province: state,
+            // district_city: city,
           },
           Phone_Number: phone,
-          Status: status,
-          Designation: designation,
-          Joining_Date: joining_date,
+          // Status: status,
+          // Designation: designation,
+          // Joining_Date: joining_date,
           Password: password,
         },
       },
