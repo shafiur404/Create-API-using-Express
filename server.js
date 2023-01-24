@@ -12,6 +12,7 @@ const port = process.env.PORT || 5000;
 
 // app.use("/auth",userRouter);
 app.use("/user",userRouter);
+// app.use("/deposit",depositRouter);
 
 app.listen(port, function (error) {
   if (error) {

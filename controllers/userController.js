@@ -39,6 +39,7 @@ const loginUser = async (req, res) => {
     });
 };
 
+
 const registerUser = async (req, res) => {
   const {
     password,
@@ -100,4 +101,26 @@ const registerUser = async (req, res) => {
     });
 };
 
-module.exports = { loginUser, registerUser };
+const userList = async (req, res) => { 
+  const access_token = await AccessToken();
+
+  await axios
+    .get(
+      `${process.env.ZOHO_API}/report/All_Users`,
+      {
+        headers: {
+          Authorization: `Zoho-oauthtoken ${access_token}`,
+        },
+      }
+    )
+    .then(function (response) {
+      console.log(response);
+      res.status(200).json(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+};
+
+module.exports = { loginUser, registerUser, userList };
