@@ -119,4 +119,33 @@ const userList = async (req, res) => {
 
 };
 
-module.exports = { loginUser, registerUser, userList };
+const editUser = async (req, res) => { 
+  const access_token = await AccessToken();
+  const { id, email, name } = req.body;
+  console.log("user id: ", id);
+  await axios
+    .patch(
+      `${process.env.ZOHO_API}/report/All_Users/${id}`,
+      {
+        data: {
+          Email: email,
+          Name: name,
+        },
+      },
+      {
+        headers: {
+          Authorization: `Zoho-oauthtoken ${access_token}`,
+        },
+      }
+    )
+    .then(function (response) {
+      console.log(response);
+      res.status(200).json(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+};
+
+module.exports = { loginUser, registerUser, userList, editUser };
