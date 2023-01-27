@@ -39,7 +39,6 @@ const loginUser = async (req, res) => {
     });
 };
 
-
 const registerUser = async (req, res) => {
   const {
     password,
@@ -77,7 +76,7 @@ const registerUser = async (req, res) => {
           Phone_Number: phone,
           Status: status,
           Designation: designation,
-          Joining_Date: joining_date,
+          joining_date: joining_date,
           Password: password,
         },
       },
@@ -97,18 +96,44 @@ const registerUser = async (req, res) => {
     });
 };
 
-const userList = async (req, res) => { 
+const userList = async (req, res) => {
   const access_token = await AccessToken();
 
   await axios
-    .get(
-      `${process.env.ZOHO_API}/report/All_Users`,
-      {
-        headers: {
-          Authorization: `Zoho-oauthtoken ${access_token}`,
-        },
-      }
-    )
+    .get(`${process.env.ZOHO_API}/report/All_Users`, {
+      headers: {
+        Authorization: `Zoho-oauthtoken ${access_token}`,
+      },
+    })
+    .then(function (response) {
+      console.log(response);
+      // const data = response.data.data.map((item) => {
+      //   return {
+      //     ...item,
+      //     full_address: item?.Address?.display_value,
+      //   };
+      // });
+      // const values = {
+      //   code: 3000,
+      //   data,
+      // };
+      res.status(200).json(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+const userDetails = async (req, res) => {
+  const access_token = await AccessToken();
+  // const { id } = req.body;
+  console.log("user id: ", req.params.id);
+  await axios
+    .get(`${process.env.ZOHO_API}/report/All_Users/${req.params.id}`, {
+      headers: {
+        Authorization: `Zoho-oauthtoken ${access_token}`,
+      },
+    })
     .then(function (response) {
       console.log(response);
       res.status(200).json(response.data);
@@ -116,16 +141,15 @@ const userList = async (req, res) => {
     .catch(function (error) {
       console.log(error);
     });
-
 };
 
-const editUser = async (req, res) => { 
+const editUser = async (req, res) => {
   const access_token = await AccessToken();
   const { id, email, name } = req.body;
   console.log("user id: ", id);
   await axios
     .patch(
-      `${process.env.ZOHO_API}/report/All_Users/${id}`,
+      `${process.env.ZOHO_API}/report/All_Users/${req.params.id}`,
       {
         data: {
           Email: email,
@@ -145,7 +169,6 @@ const editUser = async (req, res) => {
     .catch(function (error) {
       console.log(error);
     });
-
 };
 
-module.exports = { loginUser, registerUser, userList, editUser };
+module.exports = { loginUser, registerUser, userList, userDetails, editUser };
