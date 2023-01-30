@@ -11,7 +11,7 @@ const loginUser = async (req, res) => {
 
   await axios
     .get(
-      `${process.env.ZOHO_API}/report/All_Users?criteria=(Email="${email}") %26%26 (Password="${password}")`,
+      `${process.env.ZOHO_API}/report/All_Users?criteria=(email="${email}") %26%26 (password="${password}")`,
       {
         headers: {
           Authorization: `Zoho-oauthtoken ${access_token}`,
@@ -25,10 +25,10 @@ const loginUser = async (req, res) => {
       res.json({
         message: "user found",
         ID: response.data.data[0].ID,
-        Email: response.data.data[0].Email,
+        email: response.data.data[0].email,
         token: generateToken(
           response.data.data[0].ID,
-          response.data.data[0].Password
+          response.data.data[0].password
         ),
       });
     })
@@ -44,9 +44,11 @@ const registerUser = async (req, res) => {
     password,
     address_line_1,
     city,
-    country_id,
+    country,
     designation,
     email,
+    first_name,
+    last_name,
     name,
     phone,
     state,
@@ -64,20 +66,24 @@ const registerUser = async (req, res) => {
       `${process.env.ZOHO_API}/form/User`,
       {
         data: {
-          Email: email,
-          Name: name,
+          email: email,
+          name: name,
+          Name: {
+            first_name: first_name,
+            last_name: last_name,
+          },
           Address: {
             address_line_1: address_line_1,
-            country: country_id,
+            country: country,
             postal_code: zip_code,
             state_province: state,
             district_city: city,
           },
-          Phone_Number: phone,
-          Status: status,
-          Designation: designation,
+          phone: phone,
+          status: status,
+          designation: designation,
           joining_date: joining_date,
-          Password: password,
+          password: password,
         },
       },
       {
@@ -107,17 +113,19 @@ const userList = async (req, res) => {
     })
     .then(function (response) {
       console.log(response);
-      // const data = response.data.data.map((item) => {
-      //   return {
-      //     ...item,
-      //     full_address: item?.Address?.display_value,
-      //   };
-      // });
-      // const values = {
-      //   code: 3000,
-      //   data,
-      // };
-      res.status(200).json(response.data);
+      const data = response.data.data.map((item) => {
+        return {
+          ...item,
+          // full_name: item?.Name?.display_value,
+          id: item.ID,
+          name: item?.Name?.display_value,
+        };
+      });
+      const values = {
+        code: 3000,
+        data,
+      };
+      res.status(200).json(values);
     })
     .catch(function (error) {
       console.log(error);
@@ -152,8 +160,8 @@ const editUser = async (req, res) => {
       `${process.env.ZOHO_API}/report/All_Users/${req.params.id}`,
       {
         data: {
-          Email: email,
-          Name: name,
+          email: email,
+          name: name,
         },
       },
       {

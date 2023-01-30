@@ -5,6 +5,7 @@ const axios = require("axios");
 const newDeposit = async (req, res) => {
   const {
     amount,
+    name,
     deposit_date,
     email,
     first_name,
@@ -24,16 +25,17 @@ const newDeposit = async (req, res) => {
       `${process.env.ZOHO_API}/form/Deposit`,
       {
         data: {
-          Email: email,
-          // Deposit_Date: deposit_date,
-          Amount: amount,
-          Phone_Number: phone,
-          Transaction_Type: transaction_type,
+          name: name,
+          email: email,
+          deposit_date: deposit_date,
+          amount: amount,
+          phone: phone,
+          transaction_type: transaction_type,
           Name: {
             first_name: first_name,
             last_name: last_name,
           },
-          Remark: remark,
+          remark: remark,
         },
       },
       {
