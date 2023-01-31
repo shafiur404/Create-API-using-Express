@@ -115,7 +115,8 @@ const editDeposit = async (req, res) => {
     last_name,
     phone,
     remark,
-    transaction_type } = req.body;
+    transaction_type 
+  } = req.body;
   console.log("user id: ", id);
   await axios
     .patch(

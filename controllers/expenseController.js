@@ -10,7 +10,7 @@ const newExpense = async (req, res) => {
     expense_category,
     first_name,
     last_name,
-    name,
+    phone,
     receipt,
     remark,
     transaction_type,
@@ -27,10 +27,10 @@ const newExpense = async (req, res) => {
       {
         data: {
           email: email,
-          name: name,
           expense_date: expense_date,
           expense_category: expense_category,
           amount: amount,
+          phone: phone,
           transaction_type: transaction_type,
           Name: {
             first_name: first_name,
@@ -69,8 +69,19 @@ const expenseList = async (req, res) => {
       }
     )
     .then(function (response) {
-      console.log(response);
-      res.status(200).json(response.data);
+      const data = response.data.data.map((item) => {
+        return {
+          ...item,
+          // full_name: item?.Name?.display_value,
+          id: item.ID,
+          name: item?.Name?.display_value,
+        };
+      });
+      const values = {
+        code: 3000,
+        data,
+      };
+      res.status(200).json(values);
     })
     .catch(function (error) {
       console.log(error);
@@ -78,4 +89,71 @@ const expenseList = async (req, res) => {
 
 };
 
-module.exports = { newExpense, expenseList };
+const expenseDetails = async (req, res) => {
+  const access_token = await AccessToken();
+  // const { id } = req.body;
+  console.log("user id: ", req.params.id);
+  await axios
+    .get(`${process.env.ZOHO_API}/report/All_Expenses/${req.params.id}`, {
+      headers: {
+        Authorization: `Zoho-oauthtoken ${access_token}`,
+      },
+    })
+    .then(function (response) {
+      console.log(response);
+      res.status(200).json(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+const editExpense = async (req, res) => {
+  const access_token = await AccessToken();
+  const { 
+    id, 
+    amount,
+    expense_date,
+    email,
+    expense_category,
+    first_name,
+    last_name,
+    phone,
+    remark,
+    transaction_type,
+   } = req.body;
+  console.log("user id: ", id);
+  await axios
+    .patch(
+      `${process.env.ZOHO_API}/report/All_Expenses/${req.params.id}`,
+      {
+        data: {
+          email: email,
+          expense_date: expense_date,
+          expense_category: expense_category,
+          amount: amount,
+          phone: phone,
+          transaction_type: transaction_type,
+          Name: {
+            first_name: first_name,
+            last_name: last_name,
+          },
+          remark: remark,
+        },
+      },
+      {
+        headers: {
+          Authorization: `Zoho-oauthtoken ${access_token}`,
+        },
+      }
+    )
+    .then(function (response) {
+      console.log(response);
+      res.status(200).json(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+module.exports = { newExpense, expenseList, expenseDetails, editExpense };
