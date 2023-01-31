@@ -49,7 +49,7 @@ const registerUser = async (req, res) => {
     email,
     first_name,
     last_name,
-    name,
+    employee_id,
     phone,
     state,
     status,
@@ -67,7 +67,7 @@ const registerUser = async (req, res) => {
       {
         data: {
           email: email,
-          name: name,
+          employee_id: employee_id,
           Name: {
             first_name: first_name,
             last_name: last_name,
@@ -112,7 +112,6 @@ const userList = async (req, res) => {
       },
     })
     .then(function (response) {
-      console.log(response);
       const data = response.data.data.map((item) => {
         return {
           ...item,
@@ -153,7 +152,20 @@ const userDetails = async (req, res) => {
 
 const editUser = async (req, res) => {
   const access_token = await AccessToken();
-  const { id, email, name } = req.body;
+  const { id, password,
+    address_line_1,
+    city,
+    country,
+    designation,
+    email,
+    first_name,
+    last_name,
+    employee_id,
+    phone,
+    state,
+    status,
+    joining_date,
+    zip_code } = req.body;
   console.log("user id: ", id);
   await axios
     .patch(
@@ -161,7 +173,23 @@ const editUser = async (req, res) => {
       {
         data: {
           email: email,
-          name: name,
+          employee_id: employee_id,
+          Name: {
+            first_name: first_name,
+            last_name: last_name,
+          },
+          Address: {
+            address_line_1: address_line_1,
+            country: country,
+            postal_code: zip_code,
+            state_province: state,
+            district_city: city,
+          },
+          phone: phone,
+          status: status,
+          designation: designation,
+          joining_date: joining_date,
+          password: password,
         },
       },
       {

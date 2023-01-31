@@ -12,6 +12,6 @@ router.post("/login", loginUser);
 router.post("/newuser", registerUser);
 router.get("/userlist", userList);
 router.get("/userdetails/:id", userDetails);
-router.put("/edituser/:id", editUser);
+router.post("/edituser/:id", editUser);
 
 module.exports = router;
