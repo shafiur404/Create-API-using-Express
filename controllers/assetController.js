@@ -2,16 +2,15 @@ const { AccessToken } = require("../config/accessToken");
 const dotenv = require("dotenv").config();
 const axios = require("axios");
 
-const newSalary = async (req, res) => {
+const newAsset = async (req, res) => {
   const {
     amount,
-    email,
-    name,
-    bonus_category,
-    phone,
+    asset_name,
+    assign_user,
     remark,
     transaction_type,
-    paid_date,
+    assign_date,
+    status,
   } = req.body;
 
   const access_token = await AccessToken(req);
@@ -20,17 +19,16 @@ const newSalary = async (req, res) => {
 
   await axios
     .post(
-      `${process.env.ZOHO_API}/form/Salary`,
+      `${process.env.ZOHO_API}/form/Asset`,
       {
         data: {
-          email: email,
           amount: amount,
-          paid_date: paid_date,
-          phone: phone,
-          bonus_category: bonus_category,
+          assign_date: assign_date,
           transaction_type: transaction_type,
-          name: name,
+          asset_name: asset_name,
+          assign_user:assign_user,
           remark: remark,
+          status:status,
         },
       },
       {
@@ -49,12 +47,12 @@ const newSalary = async (req, res) => {
     });
 };
 
-const salaryList = async (req, res) => { 
+const assetList = async (req, res) => { 
   const access_token = await AccessToken();
 
   await axios
     .get(
-      `${process.env.ZOHO_API}/report/All_Salaries`,
+      `${process.env.ZOHO_API}/report/All_Assets`,
       {
         headers: {
           Authorization: `Zoho-oauthtoken ${access_token}`,
@@ -67,7 +65,7 @@ const salaryList = async (req, res) => {
         return {
           ...item,
           id: item?.ID,
-          name: item?.name.display_value,
+          name: item?.assign_user.display_value,
           // name: item?.name.ID,
         };
       });
@@ -83,12 +81,12 @@ const salaryList = async (req, res) => {
 
 };
 
-const salaryDetails = async (req, res) => {
+const assetDetails = async (req, res) => {
   const access_token = await AccessToken();
   // const { id } = req.body;
   console.log("user id: ", req.params.id);
   await axios
-    .get(`${process.env.ZOHO_API}/report/All_Salaries/${req.params.id}`, {
+    .get(`${process.env.ZOHO_API}/report/All_Assets/${req.params.id}`, {
       headers: {
         Authorization: `Zoho-oauthtoken ${access_token}`,
       },
@@ -102,33 +100,31 @@ const salaryDetails = async (req, res) => {
     });
 };
 
-const editSalary = async (req, res) => {
+const editAsset = async (req, res) => {
   const access_token = await AccessToken();
   const { 
     id, 
     amount,
-    email,
-    name,
-    bonus_category,
-    phone,
+    asset_name,
+    assign_user,
     remark,
     transaction_type,
-    paid_date,
+    assign_date,
+    status,
    } = req.body;
   console.log("user id: ", id);
   await axios
     .patch(
-      `${process.env.ZOHO_API}/report/All_Salaries/${req.params.id}`,
+      `${process.env.ZOHO_API}/report/All_Assets/${req.params.id}`,
       {
         data: {
-          email: email,
           amount: amount,
-          paid_date: paid_date,
-          phone: phone,
-          bonus_category: bonus_category,
+          assign_date: assign_date,
           transaction_type: transaction_type,
-          name: name,
+          asset_name: asset_name,
+          assign_user:assign_user,
           remark: remark,
+          status:status,
         },
       },
       {
@@ -146,4 +142,4 @@ const editSalary = async (req, res) => {
     });
 };
 
-module.exports = { newSalary, salaryList, salaryDetails, editSalary };
+module.exports = { newAsset, assetList, assetDetails, editAsset };

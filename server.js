@@ -6,6 +6,7 @@ const depositRouter = require("./routes/depositRoute");
 const expenseRouter = require("./routes/expenseRoute");
 const salaryRouter = require("./routes/salaryRoute");
 const withdrawRouter = require("./routes/withdrawRoute");
+const assetRouter = require("./routes/assetRoute");
 const commonRoute = require("./routes/commonRoute");
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use("/deposit", depositRouter);
 app.use("/expense", expenseRouter);
 app.use("/salary", salaryRouter);
 app.use("/withdraw", withdrawRouter);
+app.use("/asset", assetRouter);
 app.use("/sys", commonRoute);
 
 app.listen(port, function (error) {

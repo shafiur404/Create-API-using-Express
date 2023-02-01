@@ -152,7 +152,9 @@ const userDetails = async (req, res) => {
 
 const editUser = async (req, res) => {
   const access_token = await AccessToken();
-  const { id, password,
+  const { 
+    id, 
+    password,
     address_line_1,
     city,
     country,
